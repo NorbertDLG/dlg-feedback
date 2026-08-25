@@ -4,164 +4,349 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rate Us – DLG Logistics Group</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  :root { --dlg: #17479E; --dlg-dark: #0f2f6b; --white: #ffffff; }
-  body { font-family: 'Open Sans', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 1rem; background: #0a0e1a; overflow: hidden; position: relative; }
-  .bg { position: fixed; inset: 0; background-image: url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=1600&q=80'); background-size: cover; background-position: center 60%; filter: brightness(0.25) saturate(0.8); z-index: 0; }
-  .bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(10,14,26,0.6) 0%, rgba(23,71,158,0.15) 50%, rgba(10,14,26,0.85) 100%); }
-  .grid { position: fixed; inset: 0; background-image: linear-gradient(rgba(23,71,158,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(23,71,158,0.08) 1px, transparent 1px); background-size: 60px 60px; z-index: 1; }
-  .dots { position: fixed; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
-  .dot { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: rgba(23,71,158,0.6); animation: float linear infinite; }
-  .container { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; padding: 1rem; max-width: 580px; width: 100%; padding-top: 1.5rem; }
-  .logo-wrap { margin-bottom: 0.6rem; animation: fadeDown 0.6s ease both; }
-  .logo-wrap img { height: 56px; width: auto; display: block;  }
-  .card { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 1.5rem; text-align: center; width: 100%; animation: fadeUp 0.7s ease 0.1s both; box-shadow: 0 25px 60px rgba(0,0,0,0.4); }
-  .check-wrap { width: 80px; height: 60px; margin: 0 auto 1rem; background: linear-gradient(135deg, var(--dlg), #2563eb); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.3s both; box-shadow: 0 8px 30px rgba(23,71,158,0.5); }
-  .check-wrap svg { width: 38px; height: 38px; stroke: white; stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 60; stroke-dashoffset: 60; animation: drawCheck 0.4s ease 0.7s both; }
-  h1 { font-family: 'Montserrat', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--white); margin-bottom: 0.3rem; letter-spacing: -0.02em; }
-  .subtitle { font-size: 0.95rem; color: rgba(255,255,255,0.65); line-height: 1.6; margin-bottom: 0.6rem; }
-  .rating-display { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; background: rgba(23,71,158,0.2); border: 1px solid rgba(23,71,158,0.35); border-radius: 50px; padding: 0.6rem 1.4rem; margin-bottom: 0.6rem; }
-  .rating-emoji { font-size: 1.4rem; }
-  .rating-text { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.85); }
-  .form-group { text-align: left; margin-bottom: 0.6rem; }
-  .form-group label { display: block; font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-bottom: 0.4rem; letter-spacing: 0.03em; }
-  .form-group input, .form-group textarea { width: 100%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 0.75rem 1rem; color: white; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.2s; resize: none; }
-  .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(255,255,255,0.3); }
-  .form-group input:focus, .form-group textarea:focus { border-color: rgba(23,71,158,0.7); }
-  .optional { font-size: 0.7rem; color: rgba(255,255,255,0.35); margin-left: 4px; }
-  .btn-submit { width: 100%; padding: 0.9rem; background: linear-gradient(135deg, var(--dlg), #2563eb); border: none; border-radius: 12px; color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1rem; cursor: pointer; margin-top: 0.3rem; transition: opacity 0.2s, transform 0.1s; letter-spacing: 0.02em; }
-  .btn-submit:hover { opacity: 0.9; }
-  .btn-submit:active { transform: scale(0.98); }
-  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
-  .divider { width: 100%; height: 1px; background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent); margin: 1.2rem 0; }
-  .footer-text { font-size: 0.78rem; color: rgba(255,255,255,0.35); line-height: 1.5; }
-  .footer-text a { color: rgba(255,255,255,0.5); text-decoration: none; }
-  .bottom-bar { margin-top: 0.8rem; text-align: center; animation: fadeUp 0.7s ease 0.4s both; }
-  .bottom-bar p { font-size: 0.72rem; color: rgba(255,255,255,0.3); letter-spacing: 0.05em; text-transform: uppercase; }
-  @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes popIn { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
-  @keyframes drawCheck { to { stroke-dashoffset: 0; } }
-  @keyframes float { from { transform: translateY(100vh) scale(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } to { transform: translateY(-10vh) scale(1); opacity: 0; } }
+  :root{
+    --navy:#17479E;
+    --navy-dark:#0f3378;
+    --ink:#1c2430;
+    --muted:#6b7686;
+    --line:#e4e8ef;
+    --bg:#f4f6fa;
+    --card:#ffffff;
+    --radius:16px;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    min-height:100vh;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:36px 16px 60px;
+  }
+  .page{ width:100%; max-width:460px; }
+  .logo-wrap{ text-align:center; margin-bottom:18px; }
+  .logo-wrap img{ height:46px; width:auto; }
+  .card{
+    background:var(--card);
+    border-radius:var(--radius);
+    box-shadow:0 10px 30px rgba(20,30,60,.09);
+    overflow:hidden;
+    border:1px solid var(--line);
+  }
+  .band{ padding:26px 28px 20px; transition:background .25s ease; }
+  .rating-pill{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:12px; font-weight:700;
+    padding:5px 12px 5px 8px;
+    border-radius:999px;
+    margin-bottom:10px;
+  }
+  .emoji{ font-size:38px; line-height:1; margin-bottom:8px; }
+  .headline{ font-size:20px; font-weight:800; margin:0 0 6px; line-height:1.3; }
+  .subline{ font-size:13.5px; color:var(--muted); line-height:1.55; margin:0; }
+  .who-line{
+    display:none; align-items:center; gap:10px;
+    margin-top:16px; padding-top:16px;
+    border-top:1px solid rgba(20,30,60,.08);
+  }
+  .who-line.show{ display:flex; }
+  .who-avatar{
+    width:32px; height:32px; border-radius:50%;
+    background:var(--navy); color:#fff;
+    font-weight:800; font-size:12px;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .who-text{ font-size:12.5px; line-height:1.45; color:var(--muted); }
+  .who-text b{ color:var(--ink); font-weight:700; }
+  .body{ padding:22px 28px 26px; }
+  label{ display:block; font-size:12.5px; font-weight:700; color:var(--ink); margin-bottom:7px; }
+  .hint{ font-size:11.5px; color:var(--muted); font-weight:400; margin-left:4px; }
+  textarea, input[type=text], input[type=email]{
+    width:100%;
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    padding:11px 12px;
+    font-size:14px;
+    font-family:inherit;
+    color:var(--ink);
+    background:#fbfcfe;
+    resize:vertical;
+  }
+  textarea:focus, input:focus{ outline:none; border-color:var(--navy); background:#fff; }
+  .field{ margin-bottom:16px; }
+  .comment-field textarea{ min-height:92px; }
+  .priority-wrap{ border-radius:12px; padding:14px 14px 2px; margin:0 -6px 16px; }
+  .chips{ display:none; flex-wrap:wrap; gap:7px; margin-bottom:10px; }
+  .chips.show{ display:flex; }
+  .chip{
+    border:1.3px solid var(--line);
+    background:#fff;
+    border-radius:999px;
+    padding:6px 12px;
+    font-size:12px;
+    font-weight:600;
+    color:var(--ink);
+    cursor:pointer;
+  }
+  .chip.selected{ color:#fff; }
+  .optional-toggle{
+    display:flex; align-items:center; gap:6px;
+    font-size:12.5px; color:var(--navy); font-weight:700;
+    cursor:pointer; margin:0 0 14px; user-select:none;
+  }
+  .optional-toggle svg{ transition:transform .15s ease; }
+  .optional-toggle.open svg{ transform:rotate(90deg); }
+  .optional-fields{ display:none; padding-top:2px; }
+  .optional-fields.open{ display:block; }
+  .submit-btn{
+    width:100%; border:none; background:var(--navy); color:#fff;
+    font-size:14.5px; font-weight:700; padding:13px 16px;
+    border-radius:10px; cursor:pointer; margin-top:2px;
+  }
+  .submit-btn:hover{ background:var(--navy-dark); }
+  .submit-btn:disabled{ opacity:.6; cursor:not-allowed; }
+  .divider{ height:1px; background:var(--line); margin:20px 0 16px; }
+  .footer-text{ font-size:11.5px; color:var(--muted); line-height:1.6; text-align:center; }
+  .footer-text a{ color:var(--navy); text-decoration:none; }
+  .bottom-bar{ text-align:center; margin-top:16px; }
+  .bottom-bar p{ font-size:11px; color:#9aa3b2; letter-spacing:.02em; }
+  .bottom-bar a{ color:#9aa3b2; text-decoration:none; }
+  .state-screen{ text-align:center; padding:46px 28px 40px; }
+  .state-screen .big-emoji{ font-size:46px; margin-bottom:12px; }
+  .state-screen h1{ font-size:19px; margin:0 0 8px; }
+  .state-screen p{ font-size:13.5px; color:var(--muted); line-height:1.6; margin:0; }
 </style>
 </head>
 <body>
 
-<div class="bg"></div>
-<div class="grid"></div>
-<div class="dots" id="dots"></div>
-
-<div class="container">
+<div class="page">
   <div class="logo-wrap">
     <img src="data:image/png;base64,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" alt="DLG Logistics Group">
   </div>
 
   <div class="card" id="mainCard">
-    <div class="check-wrap">
-      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-    </div>
-    <h1>Thank you for<br>your feedback!</h1>
-    <p class="subtitle">Your opinion means a lot to us! If you have a moment, letting us know your company name helps us serve you even better.</p>
+    <div class="band" id="band">
+      <div class="rating-pill" id="pill"></div>
+      <div class="emoji" id="topEmoji"></div>
+      <h1 class="headline" id="mainHeadline"></h1>
+      <p class="subline" id="mainSubtitle"></p>
 
-    <div class="rating-display" id="ratingBadge">
-      <span class="rating-emoji" id="ratingEmoji">😊</span>
-      <span class="rating-text" id="ratingLabel">Excellent</span>
-    </div>
-
-    <div class="form-group">
-      <label>Your email <span class="optional">(so we can follow up if needed)</span></label>
-     <input type="email" id="imone" placeholder="your@email.com" maxlength="100" />
+      <div class="who-line" id="whoLine">
+        <div class="who-avatar" id="whoAvatar"></div>
+        <div class="who-text" id="whoText"></div>
+      </div>
     </div>
 
-    <div class="form-group">
-      <label>Anything else you would like to share? <span class="optional">(we read every comment!)</span></label>
-      <textarea id="komentaras" rows="2" placeholder="We read every comment!"></textarea>
+    <div class="body" id="formScreen">
+      <div class="priority-wrap" id="priorityWrap">
+        <div class="field comment-field">
+          <label id="commentLabel">Anything else you would like to share? <span class="hint">(we read every comment!)</span></label>
+          <div class="chips" id="chips"></div>
+          <textarea id="komentaras" rows="3" placeholder="We read every comment!"></textarea>
+        </div>
+      </div>
+
+      <div class="optional-toggle" id="optToggle">
+        <svg width="10" height="10" viewBox="0 0 10 10"><path d="M2 1 L8 5 L2 9" stroke="#17479E" stroke-width="1.6" fill="none"/></svg>
+        <span>Add company name (optional)</span>
+      </div>
+      <div class="optional-fields" id="optFields">
+        <div class="field">
+          <label>Company name <span class="hint">optional</span></label>
+          <input type="text" id="imone" placeholder="e.g. TL Solutions" maxlength="100">
+        </div>
+      </div>
+
+      <button class="submit-btn" id="sendBtn">Send my feedback</button>
+
+      <div class="divider"></div>
+      <p class="footer-text">Your feedback helps us continuously improve our service quality.<br>For any questions, please contact us at <a href="mailto:info@dlg.lt">info@dlg.lt</a></p>
     </div>
-
-    <button class="btn-submit" id="sendBtn" onclick="sendFeedback()">Send my feedback</button>
-
-    <div class="divider"></div>
-    <p class="footer-text">Your feedback helps us continuously improve our service quality.<br>For any questions, please contact us at <a href="mailto:info@dlg.lt">info@dlg.lt</a></p>
   </div>
 
   <div class="bottom-bar">
-    <p>DLG Logistics Group · Perkūnkiemio str. 5, Vilnius · <a href="https://dlg.lt" style="color:rgba(255,255,255,0.35); text-decoration:none;">dlg.lt</a></p>
+    <p>DLG Logistics Group · Perkūnkiemio str. 5, Vilnius · <a href="https://dlg.lt">dlg.lt</a></p>
   </div>
 </div>
 
 <script>
+  const EMPLOYEES = {"NGJzCePMNrNO":["Anton Puško","NVS ir Vid. Azijos šalių dalinių krovinių pervežimo skyrius"],"sokivYkmbvpY":["Gražina Urbanovič","Temperatūrinio režimo krovinių pervežimo skyrius"],"ZkeFVOafKyqg":["Denis Solovjov","Kreditų ir skolų valdymo skyrius"],"UzA4vWEpcK1h":["Marina Šukštienė","Turkijos skyrius"],"drCsDtWQdeui":["Justina Bučinskaitė","Administracija"],"xRTZTGT4pIYT":["Miroslav Aturovič","Zorvidas"],"FbM3bDlQHAmM":["Rūta Klimaitė",""],"gi4SpYuliQdk":["Paulius Niūniava","NVS operacijų skyrius"],"HIIXA26MVnLT":["Denisas Denisovas","Vidurinės Azijos skyrius"],"XHSPIPEf4Nhl":["Dmitrij Rabcevič","Vidurinės Azijos skyrius"],"FkffvRB5dPyA":["Rytis Kuliūnas","NVS ir Vid. Azijos šalių dalinių krovinių pervežimo skyrius"],"gQFYAJmCYC4B":["Linas Balčiūnas","Administracija"],"WGhUwzXpMGnW":["Olga Tila","Klientų vystymo skyrius"],"0W0M8EjT4b5I":["Jurijus Kolosovas","Klientų vystymo grupė_1"],"b9vP2RJL8Ifc":["Vladimir Tanailov","Klientų vystymo skyrius 2.1"],"SjBf5W5d3Upl":["Karolina Linevska","Temperatūrinio režimo krovinių pervežimo skyrius"],"M8vnTuv1Noo0":["Saulius Igoris Žiliajevas","Klientų aptarnavimo skyrius"],"egO4ZpCfyk77":["Julija Ivaško","NVS ir Vid. Azijos šalių dalinių krovinių pervežimo skyrius"],"SEJCBgRF4Noo":["Vadim Savickij","Europos operacijų skyrius"],"L32svmtGRre7":["Arūnas Klimkevičius","Klientų aptarnavimo skyrius"],"gD5z5sO7b3oG":["Rita Drevnickaitė","Klientų aptarnavimo skyrius"],"u2KYBAne0pyL":["Mantas Burokas","Klientų aptarnavimo skyrius"],"WZ1eqw1oTP4K":["Pavel Višnevskij","Temperatūrinio režimo krovinių pervežimo skyrius"],"ZBiI6hGbylnf":["Natalija Nikolajevičienė","Temperatūrinio režimo krovinių pervežimo skyrius"],"x8Jh1Ur1n0I3":["Andrej Kažarin","Klientų vystymo grupė_2"],"rgQ1HEhlnJZ3":["Darius Milišauskas","Turkijos skyrius"],"kL51x1pQibQt":["Jelena Miftachova","Klientų vystymo grupė_1"],"GUZBPvNMKtP2":["Maiya Bashurava","Klientų vystymo skyrius 2.1"],"kGhQjBmjA05k":["Ingrida Dževeckaja","Finansų apskaitos skyrius"],"xXRdj64IqoWx":["Anastasiia Umenushkina","Turkijos skyrius"],"K2b5saxz1WyC":["Tomaš Jusel","Europos komercijos skyrius"],"SuHMVsT8Mloq":["Edita Rusecka","NVS operacijų skyrius"],"ssLrKZaS7CkT":["Konstantin Pal","Klientų vystymo grupė_1"],"ZCjF4sFChh8X":["Marcin Griškevič","NVS operacijų skyrius"],"LqJ9aHIVWoA9":["Aliona Zverkova","Temperatūrinio režimo krovinių pervežimo skyrius"],"RIUBaxslOavd":["Ernesta Bagočiūnienė","Turkijos skyrius"],"RldNXUXi5svK":["Robertas Komoliubio","NVS ir Vid. Azijos šalių dalinių krovinių pervežimo skyrius"],"Ncl9vuY9z1dY":["Hubert Savickij","Temperatūrinio režimo krovinių pervežimo skyrius"],"ceRtJWAAUED2":["Imant Tetsmann","Europos komercijos skyrius"],"5Wy3V5Hv2QKC":["Gendrutė Bulyčevienė","Administracija"],"kqK7gzlwntPo":["Justina Katelovič","Europos operacijų skyrius"],"xDp2H9iI5mLR":["Erik Dulko","Temperatūrinio režimo krovinių pervežimo skyrius"],"ACaBm1gpYOSS":["Gabrielė Čimbarė","Finansų apskaitos skyrius"],"1sVBdKABNfda":["Vitalij Veligor","NVS operacijų skyrius"],"XK1IBlaey0m3":["Julijana Čajevskaja","Temperatūrinio režimo krovinių pervežimo skyrius"],"cYnuhD41OdVk":["Tomas Stukas","Klientų aptarnavimo skyrius"],"xY8qP3GN3Khz":["Iryna Balionis","NVS ir Vid. Azijos šalių dalinių krovinių pervežimo skyrius"],"6oftHuqhpBUn":["Alena Grigelis","Klientų vystymo skyrius 3"],"BHvWEycQz0tV":["Jovita Jucienė","Personalo skyrius"],"rVCh4FJVt88O":["Daniel Sinkevič","Temperatūrinio režimo krovinių pervežimo skyrius"],"36cCCQEIsMSt":["Elvina Rimkuvienė","Temperatūrinio režimo krovinių pervežimo skyrius"],"Kt5CPv5qkUPH":["Alvydas Jaškūnas","Logistikos operacijų departamentas"],"i4gu30aiZpiI":["Arina Serbentė","NVS ir Vid. Azijos šalių dalinių krovinių pervežimo skyrius"],"qIyNOz5WdPtx":["Viktorija Rutkovskaja","Teisės skyrius"],"89oUg6zUunbV":["Evelina Latuškina","Temperatūrinio režimo krovinių pervežimo skyrius"],"rtnhJvlVEtMt":["Mark Macutkevič","Administracija"],"GbiR622ldSJS":["Diana Sapegina","Teisės skyrius"],"aJviZVBqYBXN":["Vaidas Dabužinskas","Finansų apskaitos skyrius"],"NKcMJyDoGpOI":["Artiom Monajenko","NVS operacijų skyrius"],"lvPgiLDOQM6m":["Akvilė Švalkutė","Europos komercijos skyrius"],"B9CAKgCBnXr0":["Viktor Goršeniov","Klientų vystymo skyrius"],"3JHpvtNz023Q":["Arminas Samukėnas","Europos komercijos skyrius"],"Fag13U38cZ90":["Regina Jarmalkovič","Temperatūrinio režimo krovinių pervežimo skyrius"],"zLRgbhdOB3vj":["Turgay Bekfilavioglu","Turkijos projektas"],"ARXv0wnpQh88":["Artiom Kalinin","Multimodalinių pervežimų skyrius"],"KnPLu5Lrl9WJ":["Laura Šileikienė","Finansų apskaitos skyrius"],"Yto9FD3gLAHi":["Natalija Lobačiova","Klientų aptarnavimo skyrius"],"msXjuSwcI23M":["Rolandas Ragaliauskas","Administracija"],"vpP2dvhuhJKn":["Gediminas Kuodis","Multimodalinių pervežimų skyrius"],"hF4cM9Z4eL9r":["Julija Jankauskaitė","Klientų aptarnavimo skyrius"],"qI1mwkSTG9vw":["Natalya Goloub","Klientų vystymo skyrius 3"],"2D3BYowv1um9":["Žydrūnas Pocius","Administracija"],"1elOrMvUsopC":["Ramūnas Nagulevičius","Turkijos skyrius"],"8IcprmARhNQ0":["Justina Skrebutėnė","Kreditų ir skolų valdymo skyrius"],"2XX6pftTaEti":["Natalja Buzova","Personalo skyrius"],"BhwKboEXITEJ":["Daniel Palevič","Europos operacijų skyrius"],"4QYI90kfbfg6":["Denis Pastuškov","Temperatūrinio režimo krovinių pervežimo skyrius"],"5mjzsJFMgrTy":["Norbert Bordovski","Personalo skyrius"],"zl961DimhD3E":["Raimond Krancevič","Finansų apskaitos skyrius"],"8eoSvhBAOs8q":["Julija Gerasimovič","Finansų apskaitos skyrius"],"zMevnuM1xIzw":["Regina Gojajeva","Europos operacijų skyrius"],"0YyOATzaxMv0":["Ernest Jusel","Europos operacijų skyrius"],"jpRGI9RbAyx1":["Neringa Bastienė","Europos operacijų skyrius"],"p76sZqj7vVIG":["Byushra Sargyn","Finansų apskaitos skyrius"],"G8ucZKkjOokW":["Artiom Bormosov","Klientų vystymo skyrius 2.1"],"t2IpdwbJSCLw":["Kšistof Bordovski","Personalo skyrius"],"pS1HPhUZa9hZ":["Aleksandras Paškevičius","Klientų aptarnavimo skyrius"],"bAVLFOfgNAbH":["Oksana Antonova",""],"B4ft67j0RSvj":["Tautvydas Vaičeliūnas","Temperatūrinio režimo krovinių pervežimo skyrius"],"1RmL7buZd6vz":["Violeta Kulpiekša","Klientų vystymo grupė_1"],"6tq0BfWfKecN":["Evgeniya Grin","Klientų aptarnavimo skyrius"],"EB20z6YbNt6o":["Erikas Žaliauskas","Vidurinės Azijos skyrius"],"1zWfNtyOe61l":["Ilona Stefanovič","Klientų aptarnavimo skyrius"],"u3vT3hUTisqd":["Gintas Macionis","NVS ir Vid. Azijos šalių dalinių krovinių pervežimo skyrius"],"ui4ayR8cCpRD":["Lilija Malunavičienė","Klientų vystymo grupė_2"],"WiKSXTlyX126":["Olga Markevič","Vidurinės Azijos skyrius"],"FMeocoecCox1":["Igor Sotnikov","Temperatūrinio režimo krovinių pervežimo skyrius"],"A1UcVZDKKV8S":["Inesa Andruškevič","Temperatūrinio režimo krovinių pervežimo skyrius"],"vywgSOR6NAM3":["Linas Olubas","Kreditų ir skolų valdymo skyrius"],"ENDfBvTPDVQP":["Gražina Michalovska","Finansų apskaitos skyrius"],"c69RWtYmikHr":["Deividas Dekteriovas","Europos komercijos skyrius"],"yOewOE83EAqd":["Violeta Šablinskaja","Teisės skyrius"],"kXZ9GdG9jkhZ":["Alina Menko","Klientų vystymo skyrius"],"hJRPo6i9vQex":["Agata Bartusevič","Temperatūrinio režimo krovinių pervežimo skyrius"],"CjDpMve3GF0z":["Tomaš Narkevičius","Temperatūrinio režimo krovinių pervežimo skyrius"],"U6g8hrBrZjsA":["Sergey Bortnik","NVS operacijų skyrius"],"gxwSEB8l1Mj9":["Kristina Kaulavičiūtė","Multimodalinių pervežimų skyrius"],"iQroEHgq1WaU":["Aleksandr Šip","Klientų aptarnavimo skyrius"],"wcoqMj0Nx7Ys":["Aleksandras Vlasovas","NVS ir Vid. Azijos šalių dalinių krovinių pervežimo skyrius"],"bRgfGAbqZHnu":["Tomas Cicėnas","NVS ir Vid. Azijos šalių dalinių krovinių pervežimo skyrius"],"UzixsffaSMzP":["Olga Mingaliova","Vidurinės Azijos skyrius"],"0dMAwCe4hRVn":["Anna Kurmajeva","Teisės skyrius"],"VRN5GJnNiq8k":["Diana Ruris","Vidurinės Azijos skyrius"],"WOW49GXAUP5t":["Renata Šulska","NVS ir Vid. Azijos šalių dalinių krovinių pervežimo skyrius"],"mINIm4X4ICK7":["Liudmila Sodys","Klientų vystymo skyrius 3"],"CpTBO3nTP5zq":["Angelina Boguckytė","Turkijos skyrius"],"LiO1l6dCWlTB":["Simona Kuzmickienė","Europos operacijų skyrius"],"xc04GkyQ3gpA":["Daria Degtianikova","Klientų vystymo grupė_2"],"i9OhYCiqKAw4":["Dariuš Rogoža","Temperatūrinio režimo krovinių pervežimo skyrius"],"o4qAfG8DFDmQ":["Marina Stochkene","Temperatūrinio režimo krovinių pervežimo skyrius"],"9dmQO3TzmKDb":["Karolina Podmostko","Temperatūrinio režimo krovinių pervežimo skyrius"]};
+
+  const CHIP_OPTIONS = {
+    '3': ['Slow response', 'Unclear information', 'Pricing', 'Documentation issue', 'Other'],
+    '1': ['No response', 'Wrong information', 'Unresolved issue', 'Rude/unhelpful', 'Documentation issue', 'Other']
+  };
+
+  const RATING = {
+    '5': {
+      tint: '#eefaf2', accent: '#2fae66', emoji: '😊', label: 'Excellent',
+      h1: 'So glad we hit the mark!',
+      sub: 'Your rating has been recorded — thank you. If anything stood out, we\'d love to hear it.',
+      commentLabel: 'What worked well? <span class="hint">(optional, but we read every word)</span>',
+      placeholder: 'e.g. Fast reply, clear communication, great problem-solving…',
+      doneH1: 'Thank you — feedback sent!',
+      doneSub: 'We\'ll make sure the team hears this. Appreciate you taking the time.'
+    },
+    '3': {
+      tint: '#fff8e8', accent: '#e0a521', emoji: '😐', label: 'Average',
+      h1: 'Thanks — help us do better next time?',
+      sub: 'Your rating is saved. A quick note on what felt just okay would help us improve it fast.',
+      commentLabel: 'What could we improve? <span class="hint">(30 seconds — really helps)</span>',
+      placeholder: 'e.g. Response was a bit slow, information was unclear…',
+      doneH1: 'Thank you for the honest feedback',
+      doneSub: 'This goes straight to the manager responsible — we\'ll follow up if you left contact info.'
+    },
+    '1': {
+      tint: '#fdedeb', accent: '#e1543f', emoji: '😞', label: 'Could be better',
+      h1: 'We\'re sorry — please tell us what happened',
+      sub: 'Your rating is saved. This one matters most to us — a couple of sentences would help us fix it.',
+      commentLabel: 'What went wrong? <span class="hint">(we personally review every one)</span>',
+      placeholder: 'e.g. Delayed reply, wrong information, unresolved issue…',
+      doneH1: 'Thank you — this reached the manager',
+      doneSub: 'We take this seriously. If you left your details, someone will follow up shortly.'
+    }
+  };
+
   const params = new URLSearchParams(window.location.search);
   const score = params.get('ivert');
   const kas = params.get('kas');
   const card = document.getElementById('mainCard');
-  const emoji = document.getElementById('ratingEmoji');
-  const label = document.getElementById('ratingLabel');
 
-  if (!kas || kas === 'null') {
-    card.innerHTML = '<div class="check-wrap" style="background: linear-gradient(135deg, #6b7280, #9ca3af);"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div><h1>Invalid link</h1><p class="subtitle">This link is not valid. Please use the link from your email.</p>';
+  function showStateScreen(emoji, h1, sub, tint) {
+    card.innerHTML =
+      '<div class="state-screen" style="background:' + (tint || 'transparent') + '">' +
+      '<div class="big-emoji">' + emoji + '</div>' +
+      '<h1>' + h1 + '</h1>' +
+      '<p>' + sub + '</p>' +
+      '</div>';
+  }
+
+  if (!kas || kas === 'null' || !RATING[score]) {
+
+    showStateScreen('⚠️', 'Invalid link', 'This link is not valid. Please use the link from your email.', '#f4f6fa');
+
   } else {
 
     const storageKey = 'dlg_rated_' + kas;
     const storedData = localStorage.getItem(storageKey);
     const alreadyRated = storedData && (Date.now() - parseInt(storedData)) < 86400000;
-
-    if (score === '5') { emoji.textContent = '😊'; label.textContent = 'Excellent'; }
-    else if (score === '3') { emoji.textContent = '😐'; label.textContent = 'Average'; }
-    else if (score === '1') { emoji.textContent = '😞'; label.textContent = 'Could be better'; }
+    const r = RATING[score];
 
     if (alreadyRated) {
-      card.innerHTML = '<div class="check-wrap" style="background: linear-gradient(135deg, #6b7280, #9ca3af);"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div><h1>Already rated!</h1><p class="subtitle">You have already submitted your feedback for this service interaction.<br>Thank you for your time!</p><div class="divider"></div><p class="footer-text">For any questions, please contact us at <a href="mailto:info@dlg.lt">info@dlg.lt</a></p>';
+
+      showStateScreen(r.emoji, 'Already rated!', 'You have already submitted your feedback for this service interaction.<br>Thank you for your time!', '#f4f6fa');
+
     } else {
-      if (kas) { localStorage.setItem(storageKey, Date.now().toString()); }
+
+      localStorage.setItem(storageKey, Date.now().toString());
+
+      // Fire the rating itself immediately, same as before — this is the vote,
+      // independent of whether the person fills in anything below.
       fetch('https://api.ipify.org?format=json')
-        .then(r => r.json())
+        .then(res => res.json())
         .then(data => {
           const ip = data.ip;
           const paUrl = 'https://default0555456279e94932b7ee9d8fd2cf41.6e.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/72cbf7151914429d825e55313607f00f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=NKkQing5I-ANZMZrsXdMcUqI7L_8cLNU07Da-PSFQao&kas=' + encodeURIComponent(kas) + '&ivert=' + encodeURIComponent(score) + '&ip=' + encodeURIComponent(ip);
-          const img = new Image();
-          img.src = paUrl;
+          new Image().src = paUrl;
         })
         .catch(() => {});
-    }
 
-    function sendFeedback() {
-      if (alreadyRated) return;
-      const btn = document.getElementById('sendBtn');
-      btn.disabled = true;
-      btn.textContent = 'Sending...';
-      const imone = document.getElementById('imone').value.trim();
-      const komentaras = document.getElementById('komentaras').value.trim();
-      if (imone || komentaras) {
-        fetch('https://api.ipify.org?format=json')
-          .then(r => r.json())
-          .then(data => {
-            const ip = data.ip;
-            const paUrl = 'https://default0555456279e94932b7ee9d8fd2cf41.6e.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/72cbf7151914429d825e55313607f00f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=NKkQing5I-ANZMZrsXdMcUqI7L_8cLNU07Da-PSFQao&kas=' + encodeURIComponent(kas) + '&ivert=' + encodeURIComponent(score) + '&ip=' + encodeURIComponent(ip) + '&imone=' + encodeURIComponent(imone) + '&komentaras=' + encodeURIComponent(komentaras);
-            const img = new Image();
-            img.src = paUrl;
-          })
-          .catch(() => {});
+      // --- Render the rating band ---
+      document.getElementById('band').style.background = r.tint;
+      const pill = document.getElementById('pill');
+      pill.style.background = r.accent + '22';
+      pill.style.color = r.accent;
+      pill.innerHTML = '● ' + r.label;
+      document.getElementById('topEmoji').textContent = r.emoji;
+      document.getElementById('mainHeadline').textContent = r.h1;
+      document.getElementById('mainSubtitle').textContent = r.sub;
+      document.getElementById('commentLabel').innerHTML = r.commentLabel;
+      document.getElementById('komentaras').placeholder = r.placeholder;
+
+      const priorityWrap = document.getElementById('priorityWrap');
+      if (CHIP_OPTIONS[score]) {
+        priorityWrap.style.background = r.tint;
+        priorityWrap.style.border = '1.5px solid ' + r.accent + '40';
       }
-      showSuccess();
+      document.getElementById('sendBtn').style.background = r.accent;
+
+      // --- Personalization from the 'kas' code ---
+      if (EMPLOYEES[kas]) {
+        const emp = EMPLOYEES[kas];
+        const empName = emp[0];
+        const empDept = emp[1];
+        const initials = empName.split(' ').filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+        document.getElementById('whoAvatar').textContent = initials;
+        document.getElementById('whoText').innerHTML = 'About your conversation with <b>' + empName + '</b>' + (empDept ? ' · ' + empDept : '');
+        document.getElementById('whoLine').classList.add('show');
+      }
+
+      // --- Quick-select reason chips (Average / Could be better only) ---
+      let selectedChips = [];
+      if (CHIP_OPTIONS[score]) {
+        const chipsBox = document.getElementById('chips');
+        chipsBox.classList.add('show');
+        CHIP_OPTIONS[score].forEach(text => {
+          const chip = document.createElement('button');
+          chip.type = 'button';
+          chip.className = 'chip';
+          chip.textContent = text;
+          chip.style.setProperty('background', '#fff');
+          chip.addEventListener('click', () => {
+            const idx = selectedChips.indexOf(text);
+            if (idx >= 0) {
+              selectedChips.splice(idx, 1);
+              chip.classList.remove('selected');
+              chip.style.background = '#fff';
+              chip.style.borderColor = '';
+            } else {
+              selectedChips.push(text);
+              chip.classList.add('selected');
+              chip.style.background = r.accent;
+              chip.style.borderColor = r.accent;
+            }
+          });
+          chipsBox.appendChild(chip);
+        });
+      }
+      // Chips are independent tags, kept separate from whatever the person types —
+      // they only get combined with the free-text comment at submit time, so nothing
+      // here ever rewrites what the person typed themselves.
+
+      document.getElementById('optToggle').addEventListener('click', function () {
+        document.getElementById('optFields').classList.toggle('open');
+        this.classList.toggle('open');
+      });
+
+      document.getElementById('sendBtn').addEventListener('click', function () {
+        const btn = this;
+        btn.disabled = true;
+        btn.textContent = 'Sending...';
+
+        const imone = document.getElementById('imone').value.trim();
+        const freeText = document.getElementById('komentaras').value.trim();
+        const tags = selectedChips.length ? selectedChips.join(' · ') : '';
+        const komentaras = tags && freeText ? (tags + ' — ' + freeText) : (tags || freeText);
+
+        if (imone || komentaras) {
+          fetch('https://api.ipify.org?format=json')
+            .then(res => res.json())
+            .then(data => {
+              const ip = data.ip;
+              const paUrl = 'https://default0555456279e94932b7ee9d8fd2cf41.6e.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/72cbf7151914429d825e55313607f00f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=NKkQing5I-ANZMZrsXdMcUqI7L_8cLNU07Da-PSFQao&kas=' + encodeURIComponent(kas) + '&ivert=' + encodeURIComponent(score) + '&ip=' + encodeURIComponent(ip) + '&imone=' + encodeURIComponent(imone) + '&komentaras=' + encodeURIComponent(komentaras);
+              new Image().src = paUrl;
+            })
+            .catch(() => {});
+        }
+
+        showStateScreen(r.emoji, 'Feedback sent!', 'Thank you for taking the time to share your experience with us.', r.tint);
+      });
     }
-
-    function showSuccess() {
-      card.innerHTML = '<div class="check-wrap"><svg viewBox="0 0 24 24" style="stroke-dashoffset:0;"><polyline points="20 6 9 17 4 12"></polyline></svg></div><h1>Feedback sent!</h1><p class="subtitle">Thank you for taking the time to share your experience with us.</p><div class="divider"></div><p class="footer-text">For any questions, please contact us at <a href="mailto:info@dlg.lt">info@dlg.lt</a></p>';
-    }
-
-  }
-
-  const dotsEl = document.getElementById('dots');
-  for (let i = 0; i < 20; i++) {
-    const dot = document.createElement('div');
-    dot.className = 'dot';
-    dot.style.left = Math.random() * 100 + '%';
-    dot.style.animationDuration = (8 + Math.random() * 12) + 's';
-    dot.style.animationDelay = (Math.random() * 10) + 's';
-    dot.style.width = dot.style.height = (2 + Math.random() * 4) + 'px';
-    dotsEl.appendChild(dot);
   }
 </script>
 
