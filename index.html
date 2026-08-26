@@ -155,13 +155,13 @@
       </div>
 
       <div class="field">
-        <label>Your email <span class="hint" id="emailHint">so we can follow up if needed</span></label>
+        <label>Your email <span class="hint">required to record this rating</span></label>
         <input type="email" id="email" placeholder="you@company.com" maxlength="150">
-        <div class="field-error" id="emailError">Please add your email so we can follow up on this.</div>
+        <div class="field-error" id="emailError">Please add your email so we can record this rating.</div>
       </div>
       <div class="field">
         <label>Company name <span class="hint">optional</span></label>
-        <input type="text" id="imone" placeholder="e.g. TL Solutions" maxlength="100">
+        <input type="text" id="imone" placeholder="e.g. Acme Ltd" maxlength="100">
       </div>
 
       <button class="submit-btn" id="sendBtn">Send my feedback</button>
@@ -188,7 +188,7 @@
     '5': {
       tint: '#eefaf2', accent: '#2fae66', emoji: '😊', label: 'Excellent',
       h1: 'So glad we hit the mark!',
-      sub: 'Your rating has been recorded — thank you. If anything stood out, we\'d love to hear it.',
+      sub: 'Just add your email below to confirm this — takes five seconds. If anything stood out, we\'d love to hear it too.',
       commentLabel: 'What worked well? <span class="hint">(optional, but we read every word)</span>',
       placeholder: 'e.g. Fast reply, clear communication, great problem-solving…',
       doneH1: 'Thank you — feedback sent!',
@@ -197,7 +197,7 @@
     '3': {
       tint: '#fff8e8', accent: '#e0a521', emoji: '😐', label: 'Average',
       h1: 'Thanks — help us do better next time?',
-      sub: 'Your rating is saved. A quick note on what felt just okay would help us improve it fast.',
+      sub: 'Add your email so we can record this, and a quick note on what felt just okay would help us improve it fast.',
       commentLabel: 'What could we improve? <span class="hint">(30 seconds — really helps)</span>',
       placeholder: 'e.g. Response was a bit slow, information was unclear…',
       doneH1: 'Thank you for the honest feedback',
@@ -206,7 +206,7 @@
     '1': {
       tint: '#fdedeb', accent: '#e1543f', emoji: '😞', label: 'Could be better',
       h1: 'We\'re sorry — please tell us what happened',
-      sub: 'Your rating is saved. This one matters most to us — a couple of sentences would help us fix it.',
+      sub: 'Add your email so this reaches the right person — a couple of sentences on what happened would help us fix it.',
       commentLabel: 'What went wrong? <span class="hint">(we personally review every one)</span>',
       placeholder: 'e.g. Delayed reply, wrong information, unresolved issue…',
       doneH1: 'Thank you — this reached the manager',
@@ -245,18 +245,9 @@
 
     } else {
 
-      localStorage.setItem(storageKey, Date.now().toString());
-
-      // Fire the rating itself immediately, same as before — this is the vote,
-      // independent of whether the person fills in anything below.
-      fetch('https://api.ipify.org?format=json')
-        .then(res => res.json())
-        .then(data => {
-          const ip = data.ip;
-          const paUrl = 'https://default0555456279e94932b7ee9d8fd2cf41.6e.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/72cbf7151914429d825e55313607f00f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=NKkQing5I-ANZMZrsXdMcUqI7L_8cLNU07Da-PSFQao&kas=' + encodeURIComponent(kas) + '&ivert=' + encodeURIComponent(score) + '&ip=' + encodeURIComponent(ip);
-          new Image().src = paUrl;
-        })
-        .catch(() => {});
+      // Nothing is recorded yet at this point — the rating itself is only saved once
+      // the person submits below with their email. A click alone (including bots/
+      // email-safety scanners that just fetch this page) registers nothing.
 
       // --- Render the rating band ---
       document.getElementById('band').style.background = r.tint;
@@ -320,43 +311,37 @@
       // they only get combined with the free-text comment at submit time, so nothing
       // here ever rewrites what the person typed themselves.
 
-      const emailElInit = document.getElementById('email');
-      emailElInit.addEventListener('input', function () {
+      const emailEl = document.getElementById('email');
+      emailEl.addEventListener('input', function () {
         this.classList.remove('field-invalid');
         document.getElementById('emailError').classList.remove('show');
       });
 
       document.getElementById('sendBtn').addEventListener('click', function () {
         const btn = this;
-        const emailEl = document.getElementById('email');
-        const emailErrorEl = document.getElementById('emailError');
         const company = document.getElementById('imone').value.trim();
         const email = emailEl.value.trim();
         const freeText = document.getElementById('komentaras').value.trim();
         const tags = selectedChips.length ? selectedChips.join(' · ') : '';
         const komentaras = tags && freeText ? (tags + ' — ' + freeText) : (tags || freeText);
-        const hasContent = !!(komentaras || company);
 
-        // Nothing typed at all — their vote is already recorded, nothing more to send.
-        if (!hasContent && !email) {
-          showStateScreen(r.emoji, 'Thanks again!', 'Your rating has already been recorded. Have a great day!', r.tint);
-          return;
-        }
-
-        // If they're leaving any feedback, we need an email to be able to follow up.
-        if (hasContent && !email) {
+        // Nothing is recorded — including the rating itself — without an email.
+        // This is deliberate: an anonymous click can't be followed up on, and
+        // following up on the low ratings is the whole point of this page.
+        if (!email) {
           emailEl.classList.add('field-invalid');
-          emailErrorEl.classList.add('show');
+          document.getElementById('emailError').classList.add('show');
           emailEl.focus();
           return;
         }
 
         btn.disabled = true;
         btn.textContent = 'Sending...';
+        localStorage.setItem(storageKey, Date.now().toString());
 
         // Folded into the existing 'imone' param so no Power Automate/Excel change is needed —
-        // it now carries "email — company" instead of just company.
-        const imoneValue = company ? (email + ' — ' + company) : email;
+        // it now carries "email — company" (or just the email, if no company was given).
+        const imoneValue = [email, company].filter(Boolean).join(' — ');
 
         fetch('https://api.ipify.org?format=json')
           .then(res => res.json())
