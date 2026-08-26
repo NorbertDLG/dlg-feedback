@@ -110,6 +110,9 @@
   }
   .submit-btn:hover{ background:var(--navy-dark); }
   .submit-btn:disabled{ opacity:.6; cursor:not-allowed; }
+  .field-error{ display:none; color:#c0392b; font-size:11.5px; margin-top:6px; }
+  .field-error.show{ display:block; }
+  input.field-invalid{ border-color:#c0392b !important; background:#fdf0ef !important; }
   .divider{ height:1px; background:var(--line); margin:20px 0 16px; }
   .footer-text{ font-size:11.5px; color:var(--muted); line-height:1.6; text-align:center; }
   .footer-text a{ color:var(--navy); text-decoration:none; }
@@ -151,15 +154,14 @@
         </div>
       </div>
 
-      <div class="optional-toggle" id="optToggle">
-        <svg width="10" height="10" viewBox="0 0 10 10"><path d="M2 1 L8 5 L2 9" stroke="#17479E" stroke-width="1.6" fill="none"/></svg>
-        <span>Add company name (optional)</span>
+      <div class="field">
+        <label>Your email <span class="hint" id="emailHint">so we can follow up if needed</span></label>
+        <input type="email" id="email" placeholder="you@company.com" maxlength="150">
+        <div class="field-error" id="emailError">Please add your email so we can follow up on this.</div>
       </div>
-      <div class="optional-fields" id="optFields">
-        <div class="field">
-          <label>Company name <span class="hint">optional</span></label>
-          <input type="text" id="imone" placeholder="e.g. TL Solutions" maxlength="100">
-        </div>
+      <div class="field">
+        <label>Company name <span class="hint">optional</span></label>
+        <input type="text" id="imone" placeholder="e.g. TL Solutions" maxlength="100">
       </div>
 
       <button class="submit-btn" id="sendBtn">Send my feedback</button>
@@ -318,31 +320,52 @@
       // they only get combined with the free-text comment at submit time, so nothing
       // here ever rewrites what the person typed themselves.
 
-      document.getElementById('optToggle').addEventListener('click', function () {
-        document.getElementById('optFields').classList.toggle('open');
-        this.classList.toggle('open');
+      const emailElInit = document.getElementById('email');
+      emailElInit.addEventListener('input', function () {
+        this.classList.remove('field-invalid');
+        document.getElementById('emailError').classList.remove('show');
       });
 
       document.getElementById('sendBtn').addEventListener('click', function () {
         const btn = this;
-        btn.disabled = true;
-        btn.textContent = 'Sending...';
-
-        const imone = document.getElementById('imone').value.trim();
+        const emailEl = document.getElementById('email');
+        const emailErrorEl = document.getElementById('emailError');
+        const company = document.getElementById('imone').value.trim();
+        const email = emailEl.value.trim();
         const freeText = document.getElementById('komentaras').value.trim();
         const tags = selectedChips.length ? selectedChips.join(' · ') : '';
         const komentaras = tags && freeText ? (tags + ' — ' + freeText) : (tags || freeText);
+        const hasContent = !!(komentaras || company);
 
-        if (imone || komentaras) {
-          fetch('https://api.ipify.org?format=json')
-            .then(res => res.json())
-            .then(data => {
-              const ip = data.ip;
-              const paUrl = 'https://default0555456279e94932b7ee9d8fd2cf41.6e.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/72cbf7151914429d825e55313607f00f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=NKkQing5I-ANZMZrsXdMcUqI7L_8cLNU07Da-PSFQao&kas=' + encodeURIComponent(kas) + '&ivert=' + encodeURIComponent(score) + '&ip=' + encodeURIComponent(ip) + '&imone=' + encodeURIComponent(imone) + '&komentaras=' + encodeURIComponent(komentaras);
-              new Image().src = paUrl;
-            })
-            .catch(() => {});
+        // Nothing typed at all — their vote is already recorded, nothing more to send.
+        if (!hasContent && !email) {
+          showStateScreen(r.emoji, 'Thanks again!', 'Your rating has already been recorded. Have a great day!', r.tint);
+          return;
         }
+
+        // If they're leaving any feedback, we need an email to be able to follow up.
+        if (hasContent && !email) {
+          emailEl.classList.add('field-invalid');
+          emailErrorEl.classList.add('show');
+          emailEl.focus();
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Sending...';
+
+        // Folded into the existing 'imone' param so no Power Automate/Excel change is needed —
+        // it now carries "email — company" instead of just company.
+        const imoneValue = company ? (email + ' — ' + company) : email;
+
+        fetch('https://api.ipify.org?format=json')
+          .then(res => res.json())
+          .then(data => {
+            const ip = data.ip;
+            const paUrl = 'https://default0555456279e94932b7ee9d8fd2cf41.6e.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/72cbf7151914429d825e55313607f00f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=NKkQing5I-ANZMZrsXdMcUqI7L_8cLNU07Da-PSFQao&kas=' + encodeURIComponent(kas) + '&ivert=' + encodeURIComponent(score) + '&ip=' + encodeURIComponent(ip) + '&imone=' + encodeURIComponent(imoneValue) + '&komentaras=' + encodeURIComponent(komentaras);
+            new Image().src = paUrl;
+          })
+          .catch(() => {});
 
         showStateScreen(r.emoji, 'Feedback sent!', 'Thank you for taking the time to share your experience with us.', r.tint);
       });
