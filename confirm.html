@@ -133,10 +133,9 @@
   </div>
   <div class="card" id="mainCard">
     <div class="state-screen" style="background:#f4f6fa">
-      <div class="big-emoji">✉️</div>
-      <h1>Confirm your rating</h1>
-      <p>Please click the button below to confirm that this feedback came from you.</p>
-      <button class="submit-btn" id="confirmBtn" style="margin-top:22px">Confirm my rating</button>
+      <div class="big-emoji">⏳</div>
+      <h1>Confirming your rating...</h1>
+      <p>Please wait a moment.</p>
     </div>
   </div>
   <div class="bottom-bar">
@@ -161,19 +160,24 @@
     error:   ['⚠️', 'Something went wrong', 'Please try again in a minute.', '#fdf0ef']
   };
 
+  function confirmRating() {
+    screen('⏳', 'Confirming your rating...', 'Please wait a moment.');
+    fetch(PA_CONFIRM_URL + '&t=' + encodeURIComponent(token))
+      .then(res => res.json())
+      .then(d => screen.apply(null, MSG[d.status] || MSG.error))
+      .catch(() => {
+        screen.apply(null, MSG.error);
+        card.querySelector('.state-screen').insertAdjacentHTML('beforeend',
+          '<button class="submit-btn" id="retryBtn" style="margin-top:22px">Try again</button>');
+        document.getElementById('retryBtn').addEventListener('click', confirmRating);
+      });
+  }
+
   if (!token || !/^[0-9a-fA-F-]{36}$/.test(token)) {
     screen.apply(null, MSG.invalid);
   } else {
-    // Nothing happens on page load: email security scanners open links automatically,
-    // so the rating is confirmed only when a real person clicks the button.
-    document.getElementById('confirmBtn').addEventListener('click', function () {
-      this.disabled = true;
-      this.textContent = 'Confirming...';
-      fetch(PA_CONFIRM_URL + '&t=' + encodeURIComponent(token))
-        .then(res => res.json())
-        .then(d => screen.apply(null, MSG[d.status] || MSG.error))
-        .catch(() => screen.apply(null, MSG.error));
-    });
+    // Confirms automatically when the page opens in a browser
+    confirmRating();
   }
 </script>
 </body>
